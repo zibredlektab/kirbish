@@ -5,6 +5,7 @@ using UnityEngine;
 public class BoyoMovement : MonoBehaviour
 {
 
+    public Color floatColor;
     public float gravityScale = 3;
     public float jumpSpeed = 20;
     public float moveSpeed = 6;
@@ -21,20 +22,20 @@ public class BoyoMovement : MonoBehaviour
     private float bounceCount = 1;
     private float timeFalling;
     private GameObject groundObject;
+    private Material mat;
+    private Color standardColor;
     
     // Start is called before the first frame update
     void Start() {
         rb = GetComponent<Rigidbody>();
         mass = rb.mass;
         remainingFloatTime = totalFloatTime;
+        mat = GetComponent<Renderer>().material;
+        standardColor = mat.color;
     }
 
     // Update is called once per frame
     void Update() {
-        // Horizontal movement
-        float horizontalInput = Input.GetAxis("Horizontal");
-        if (remainingFloatTime < 2) horizontalInput *= 0.5F;
-        transform.Translate(new Vector3(horizontalInput, 0, 0) * moveSpeed * Time.deltaTime);
         
         if (floating) {
             if (remainingFloatTime <= 0) {
@@ -46,14 +47,15 @@ public class BoyoMovement : MonoBehaviour
         
     }
     
-    private void endFloat() {
-        Debug.Log("ending float");
-        timeFalling = 0.0F;
-        floating = false;
-        rb.useGravity = true;
-    }
     
+    // Physics goes here
     private void FixedUpdate() {
+    
+        // Horizontal movement
+        float horizontalInput = Input.GetAxis("Horizontal");
+        if (remainingFloatTime < 2) horizontalInput *= 0.5F;
+        transform.Translate(new Vector3(horizontalInput, 0, 0) * moveSpeed * Time.deltaTime);
+        
         if (!floating) {
             rb.AddForce(Physics.gravity * (gravityScale - 1) * rb.mass); // scale up gravity so we fall faster
             if (!onGround) timeFalling += Time.deltaTime; // track how long we've been falling;
@@ -67,7 +69,6 @@ public class BoyoMovement : MonoBehaviour
     
     void OnCollisionEnter(Collision collision) {
         if (collision.GetContact(0).normal.y > .9) { // only bottom-facing normals count as ground collisions
-            Debug.Log("on ground");
             onGround = true;
             jumping = false;
             groundObject = collision.gameObject;
@@ -77,13 +78,11 @@ public class BoyoMovement : MonoBehaviour
         
             if (timeFalling > 1) {
                 bounceCount = 2;
-                Debug.Log("should bounce twice");
             }
             
             timeFalling = 0.0F;
         
             if (bounceCount > 0) {
-                Debug.Log("bouncing");
                 rb.AddForce(Vector3.up * 5 * bounceCount, ForceMode.Impulse);
                 bounceCount--;
             }
@@ -94,10 +93,16 @@ public class BoyoMovement : MonoBehaviour
     void OnCollisionExit(Collision collision) {
         if (onGround && groundObject == collision.gameObject) {
             onGround = false;
-            Debug.Log("no longer on ground");
         }
     }
     
+    
+    private void endFloat() {
+        timeFalling = 0.0F;
+        floating = false;
+        rb.useGravity = true;
+        mat.color = standardColor;
+    }
     
     
     void OnMove() {
@@ -107,16 +112,15 @@ public class BoyoMovement : MonoBehaviour
     
     void OnJump() {
         if (onGround) {
-            Debug.Log("jump");
             jumping = true;
             bounceCount = 1;
             rb.AddForce(Vector3.up * jumpSpeed, ForceMode.Impulse); // start accelerating up
         } else if (jumping || floating) {
-            Debug.Log("floating");
             floating = true;
             jumping = false;
             rb.AddForce(Vector3.up * jumpSpeed * 0.75F, ForceMode.Impulse); // float also pushes up, but not as much as a jump
             rb.useGravity = false; // disable gravity
+            mat.color = floatColor;
         }
     }
     

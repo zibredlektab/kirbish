@@ -776,11 +776,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe3fdcbee945143c1ab52367dc047210, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rb: {fileID: 0}
-  gravityScale: 5
-  jumpSpeed: 15
+  modelObject: {fileID: 0}
+  gravityScale: 4.5
+  jumpSpeed: 14
   moveSpeed: 5
-  floatDownSpeed: 8
+  floatDownSpeed: 4
   totalFloatTime: 5
 --- !u!1 &1327968240
 GameObject:
