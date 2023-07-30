@@ -24,6 +24,7 @@ public class BoyoMovement : MonoBehaviour
     private GameObject groundObject;
     private Material mat;
     private Color standardColor;
+    private bool repulsing = false; // is boyo being repulsed after pain?
     
     // Start is called before the first frame update
     void Start() {
@@ -54,7 +55,7 @@ public class BoyoMovement : MonoBehaviour
         // Horizontal movement
         float horizontalInput = Input.GetAxis("Horizontal");
         if (remainingFloatTime < 2) horizontalInput *= 0.5F;
-        transform.Translate(new Vector3(horizontalInput, 0, 0) * moveSpeed * Time.deltaTime);
+        if (!repulsing) transform.Translate(new Vector3(horizontalInput, 0, 0) * moveSpeed * Time.deltaTime);
     
         if (!floating) {
             rb.AddForce(Physics.gravity * (gravityScale - 1) * rb.mass); // scale up gravity so we fall faster
@@ -76,6 +77,8 @@ public class BoyoMovement : MonoBehaviour
             remainingFloatTime = totalFloatTime;
             
             if (floating) EndFloat();
+            
+            if (repulsing) repulsing = false;
         
             if (timeFalling > 1) {
                 bounceCount = 2;
@@ -151,6 +154,7 @@ public class BoyoMovement : MonoBehaviour
         
         Vector3 repulsion = new Vector3(xdir, ydir, 0);
         
+        repulsing = true;
         rb.AddForce(repulsion, ForceMode.Impulse); // push back from pain
         bounceCount = 1;
         Debug.Log("repulsion vector is " + repulsion);
