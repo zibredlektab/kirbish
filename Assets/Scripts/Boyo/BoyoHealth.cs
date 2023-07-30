@@ -6,21 +6,36 @@ public class BoyoHealth : MonoBehaviour {
 
     public int maxHealth = 6;
     public int startingLives = 3;
+    public Color painColor;
     
     private int curHealth;
     private int curLives;
     private bool gameOver = false;
+    private Color standardColor;
+    private Material mat;
+    private float lerpTime = 0;
+    private bool recovering = false;
         
     void Start() {
     
         curHealth = maxHealth;
         curLives = startingLives;
-        
+        mat = GetComponent<Renderer>().material;
+        standardColor = mat.color;
     }
 
     void Update() {
         if (curHealth <= 0) {
             EndGame();
+        }
+        
+        if (recovering && mat.color != standardColor) {
+            lerpTime += Time.deltaTime * 1.5F;
+            Color lerpedColor = Color.Lerp(painColor, standardColor, lerpTime);
+            mat.color = lerpedColor;
+        } else {
+            recovering = false;
+            lerpTime = 0;
         }
     }
     
@@ -41,9 +56,12 @@ public class BoyoHealth : MonoBehaviour {
     }
     
     void OnCollisionEnter(Collision collision) {
-        if (collision.gameObject.tag == "Pain") {
-            Debug.Log("ow!");
+        if (!recovering && collision.gameObject.tag == "Pain") {
+            Debug.Log("ow! collision normal is " + collision.GetContact(0).normal);
             curHealth--;
+            mat.color = painColor;
+            recovering = true;
+            gameObject.SendMessage("OnPain", collision.GetContact(0).normal);
         }
     }
     

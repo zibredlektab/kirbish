@@ -69,7 +69,7 @@ public class BoyoMovement : MonoBehaviour
     
     
     void OnCollisionEnter(Collision collision) {
-        if (collision.GetContact(0).normal.y > .9) { // only bottom-facing normals count as ground collisions
+        if (collision.GetContact(0).normal.y > .5) { // only bottom-facing normals count as ground collisions
             onGround = true;
             jumping = false;
             groundObject = collision.gameObject;
@@ -134,6 +134,26 @@ public class BoyoMovement : MonoBehaviour
     
     void OnGameOver() {
         Time.timeScale = 0;
+    }
+    
+    void OnPain(Vector3 direction) {
+        float ydir = 7;
+        float xdir = 3;
+        
+        if (direction.y != 0) {
+            ydir = direction.y * 10;
+        }
+        
+        if (direction.x != 0) {
+            xdir = direction.x * 10;
+            
+        }
+        
+        Vector3 repulsion = new Vector3(xdir, ydir, 0);
+        
+        rb.AddForce(repulsion, ForceMode.Impulse); // push back from pain
+        bounceCount = 1;
+        Debug.Log("repulsion vector is " + repulsion);
     }
     
 }
