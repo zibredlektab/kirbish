@@ -144,7 +144,7 @@ public class BoyoMovement : MonoBehaviour
         float xdir = 3;
         
         if (direction.y != 0) {
-            ydir = direction.y * 10;
+            ydir = direction.y * 7;
         }
         
         if (direction.x != 0) {
