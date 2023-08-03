@@ -161,10 +161,4 @@ public class BoyoMovement : MonoBehaviour
         Debug.Log("repulsion vector is " + repulsion);
     }
     
-    void OnTriggerEnter(Collider collider) {        
-        gameObject.SendMessage("OnPain", new Vector3(0,0,0));
-        Debug.Log("On Trigger Enter from movement, with " + collider.gameObject.name);
-        
-    }
-    
 }

@@ -57,11 +57,18 @@ public class BoyoHealth : MonoBehaviour {
     
     void OnPain(Vector3 vector) {
         Debug.Log("ow from health");
-        //if (!recovering && GetComponent<Collider>().gameObject.tag == "Pain") {
-            curHealth--;
-            mat.color = painColor;
-            recovering = true;
-        //}
+        curHealth--;
+        mat.color = painColor;
+        recovering = true;
+    }
+    
+    
+    void OnTriggerEnter(Collider collider) {    
+        Debug.Log("On Trigger Enter from BoyoHealth, with " + collider.gameObject.name);
+        
+        if (!recovering && collider.gameObject.CompareTag("Pain")) {
+            gameObject.SendMessage("OnPain", new Vector3(0,0,0));
+        }
     }
     
 }
