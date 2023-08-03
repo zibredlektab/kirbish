@@ -140,7 +140,6 @@ public class BoyoMovement : MonoBehaviour
     }
     
     void OnPain(Vector3 direction) {
-        Debug.Log("ow from movement");
         float ydir = 7;
         float xdir = 3;
         
@@ -149,7 +148,7 @@ public class BoyoMovement : MonoBehaviour
         }
         
         if (direction.x != 0) {
-            xdir = direction.x * 10;
+            xdir = direction.x * 6;
             
         }
         

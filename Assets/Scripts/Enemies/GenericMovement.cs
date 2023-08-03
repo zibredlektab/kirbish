@@ -45,7 +45,7 @@ public class GenericMovement : MonoBehaviour {
     }
     
     void OnTriggerEnter(Collider collider) {
-        Debug.Log("Enemy " + gameObject.name + " entered trigger " + collider.gameObject.name);
+        //Debug.Log("Enemy " + gameObject.name + " entered trigger " + collider.gameObject.name);
     }
 }
 
