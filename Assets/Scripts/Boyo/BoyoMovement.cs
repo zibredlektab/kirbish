@@ -14,9 +14,9 @@ public class BoyoMovement : MonoBehaviour
     
 
     private Rigidbody rb;
-    private bool onGround = false;
-    private bool jumping = false;
-    private bool floating = false;
+    public bool onGround = false;
+    public bool jumping = false;
+    public bool floating = false;
     private float mass;
     private float remainingFloatTime;
     private float bounceCount = 1;
@@ -24,7 +24,7 @@ public class BoyoMovement : MonoBehaviour
     private GameObject groundObject;
     private Material mat;
     private Color standardColor;
-    private bool repulsing = false; // is boyo being repulsed after pain?
+    public bool repulsing = false; // is boyo being repulsed after pain?
     
     // Start is called before the first frame update
     void Start() {
@@ -70,6 +70,7 @@ public class BoyoMovement : MonoBehaviour
     
     
     void OnCollisionEnter(Collision collision) {
+        //Debug.Log("collision with " + collision.gameObject.name);
         if (collision.GetContact(0).normal.y > .5) { // only bottom-facing normals count as ground collisions
             onGround = true;
             jumping = false;
@@ -131,7 +132,6 @@ public class BoyoMovement : MonoBehaviour
     
     
     void OnAttack() {
-        Debug.Log("attack");
         if (floating) EndFloat();
     }
     
@@ -140,6 +140,7 @@ public class BoyoMovement : MonoBehaviour
     }
     
     void OnPain(Vector3 direction) {
+        Debug.Log("ow from movement");
         float ydir = 7;
         float xdir = 3;
         
@@ -158,6 +159,12 @@ public class BoyoMovement : MonoBehaviour
         rb.AddForce(repulsion, ForceMode.Impulse); // push back from pain
         bounceCount = 1;
         Debug.Log("repulsion vector is " + repulsion);
+    }
+    
+    void OnTriggerEnter(Collider collider) {        
+        gameObject.SendMessage("OnPain", new Vector3(0,0,0));
+        Debug.Log("On Trigger Enter from movement, with " + collider.gameObject.name);
+        
     }
     
 }

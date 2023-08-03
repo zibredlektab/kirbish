@@ -1,5 +1,5 @@
 {
-    "name": "KirbishInputActions",
+    "name": "InputActions",
     "maps": [
         {
             "name": "Player",
@@ -34,12 +34,12 @@
                 },
                 {
                     "name": "Attack",
-                    "type": "Button",
+                    "type": "Value",
                     "id": "54950972-b486-40df-8ef1-44a84c8caeee",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [

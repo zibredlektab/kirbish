@@ -55,14 +55,13 @@ public class BoyoHealth : MonoBehaviour {
         gameOver = true;
     }
     
-    void OnCollisionEnter(Collision collision) {
-        if (!recovering && collision.gameObject.tag == "Pain") {
-            Debug.Log("ow! collision normal is " + collision.GetContact(0).normal);
+    void OnPain(Vector3 vector) {
+        Debug.Log("ow from health");
+        //if (!recovering && GetComponent<Collider>().gameObject.tag == "Pain") {
             curHealth--;
             mat.color = painColor;
             recovering = true;
-            gameObject.SendMessage("OnPain", collision.GetContact(0).normal);
-        }
+        //}
     }
     
 }
