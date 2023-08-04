@@ -172,7 +172,6 @@ public class BoyoMovement : MonoBehaviour
         repulsing = true;
         rb.AddForce(repulsion, ForceMode.Impulse); // push back from pain
         bounceCount = 1;
-        Debug.Log("repulsion vector is " + repulsion);
     }
     
     

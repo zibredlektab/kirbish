@@ -25,7 +25,6 @@ public class BoyoAttack : MonoBehaviour
     }
     
     void AttackStart() {
-        Debug.Log("attacking");
         breatheInRegion.SetActive(true);
         gameObject.BroadcastMessage("OnAttack");
     }
@@ -38,7 +37,6 @@ public class BoyoAttack : MonoBehaviour
     }
     
     void AttackStop() {
-        Debug.Log("no longer attacking");
         gameObject.BroadcastMessage("OnAttackStop");
     }
     

@@ -16,6 +16,8 @@ public class BoyoHealth : MonoBehaviour {
     private Material mat;
     private float lerpTime = 0;
     private bool recovering = false;
+    private bool attacking = false;
+    private GameObject currentlyAttacking; // this should be an array, as multiple enemies can be attacked simultaneously
         
     void Start() {
     
@@ -66,18 +68,33 @@ public class BoyoHealth : MonoBehaviour {
     void OnTriggerEnter(Collider collider) {    
         //Debug.Log("On Trigger Enter from BoyoHealth, with " + collider.gameObject.name);
         
-        if (!recovering && collider.gameObject.CompareTag("Pain")) {
-        
-            Vector3 collisionDirection = new Vector3(0,0,0);
+        if (collider.gameObject.CompareTag("Pain")) {
+            if (!recovering && !attacking) {
+                Vector3 collisionDirection = new Vector3(0,0,0);
             
-            if (transform.position.x - collider.transform.position.x > 0) {
-                collisionDirection.x = 1;
-            } else {
-                collisionDirection.x = -1;
+                if (transform.position.x - collider.transform.position.x > 0) {
+                    collisionDirection.x = 1;
+                } else {
+                    collisionDirection.x = -1;
+                }
+            
+                gameObject.SendMessage("OnPain", collisionDirection);
+            } else if (attacking) {
+                currentlyAttacking = collider.gameObject;
+                collider.gameObject.transform.parent.BroadcastMessage("OnSuction", transform.position);
             }
-            
-            gameObject.SendMessage("OnPain", collisionDirection);
         }
     }
     
+    void OnAttack() {
+        attacking = true;
+    }
+    
+    void OnAttackStop() {
+        attacking = false;
+        if (currentlyAttacking != null) {
+            currentlyAttacking.transform.parent.BroadcastMessage("OnSuctionStop");
+            currentlyAttacking = null;
+        }
+    }
 }
