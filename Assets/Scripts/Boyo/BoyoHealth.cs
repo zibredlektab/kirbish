@@ -65,7 +65,6 @@ public class BoyoHealth : MonoBehaviour {
     
     
     void OnTriggerEnter(Collider collider) {    
-        Debug.Log("On Trigger Enter from BoyoHealth, with " + collider.gameObject.name);
         
         if (collider.gameObject.CompareTag("Pain")) {
             if (!recovering && !attacking) {

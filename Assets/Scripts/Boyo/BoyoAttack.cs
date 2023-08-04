@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class BoyoAttack : MonoBehaviour
-{
+public class BoyoAttack : MonoBehaviour {
+
     public GameObject breatheInRegion;
     public InputActionAsset actions;
     public GameObject mouth;
+    public GameObject projectile;
     
     private InputAction attackAction;
     private bool attacking = false;
@@ -23,8 +24,11 @@ public class BoyoAttack : MonoBehaviour
         float attack = attackAction.ReadValue<float>(); // get attack button state
         
         if (attack > 0) { // attack button is being pressed
+        
             if (mouthFull == 2) {
-                // spit out blob                
+                // spit out blob
+                Debug.Log("spitting out blob");
+                Instantiate(projectile, new Vector3(transform.position.x + 1, transform.position.y, transform.position.z), new Quaternion(0,0,0,0));  
                 mouth.transform.localScale = new Vector3(0.25f, 0.25f, 0.25f);
                 mouthFull = 3;
             } else {
@@ -69,8 +73,6 @@ public class BoyoAttack : MonoBehaviour
     
     void OnTriggerStay(Collider collider) {
         if (attacking && collider.gameObject.layer == LayerMask.NameToLayer("Enemy")) {
-            Debug.Log("colliding object is " + collider.gameObject.name);
-            Debug.Log("colliding object parent is " + collider.gameObject.transform.parent.gameObject.name);
             currentlyAttacking = collider.gameObject.transform.parent.gameObject;
             currentlyAttacking.BroadcastMessage("OnSuction", transform.position);
             if (Mathf.Abs(transform.position.x - currentlyAttacking.transform.position.x) < 0.5F) { // enemy has been sucked into our danger zone
