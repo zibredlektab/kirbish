@@ -5,9 +5,9 @@ using UnityEngine.InputSystem;
 
 public class BoyoAttack : MonoBehaviour
 {
-    public GameObject breathInRegion;
+    public GameObject breatheInRegion;
     public InputActionAsset actions;
-    
+    public GameObject mouth;
     
     private InputAction attackAction;
     private bool attacking = false;
@@ -26,11 +26,25 @@ public class BoyoAttack : MonoBehaviour
     
     void AttackStart() {
         Debug.Log("attacking");
-        attacking = true;
+        breatheInRegion.SetActive(true);
+        gameObject.BroadcastMessage("OnAttack");
+    }
+    
+    void OnAttack() {
+        if (!attacking) {
+            attacking = true;
+            mouth.transform.localScale = new Vector3(mouth.transform.localScale.x, mouth.transform.localScale.y, 0.75f);        
+        }
     }
     
     void AttackStop() {
         Debug.Log("no longer attacking");
+        gameObject.BroadcastMessage("OnAttackStop");
+    }
+    
+    void OnAttackStop() {
         attacking = false;
+        breatheInRegion.SetActive(false);
+        mouth.transform.localScale = new Vector3(mouth.transform.localScale.x, mouth.transform.localScale.y, 0.25f);
     }
 }

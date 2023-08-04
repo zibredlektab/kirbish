@@ -844,8 +844,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e704c79635b64e449fbbe902481ec70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  breathInRegion: {fileID: 316742159}
+  breatheInRegion: {fileID: 316742159}
   actions: {fileID: -944628639613478452, guid: bed8c2145966b47358eca34b1e1e2bf9, type: 3}
+  mouth: {fileID: 1309980967}
 --- !u!136 &903076232
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1090,7 +1091,7 @@ Transform:
   m_LocalRotation: {x: -0.70710653, y: -0, z: -0, w: 0.7071071}
   m_LocalPosition: {x: 0.48000002, y: 0, z: -0.013000011}
   m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
-  m_ConstrainProportionsScale: 1
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1058966957}
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
