@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class BoyoMovement : MonoBehaviour
 {
 
+    public InputActionAsset actions;
     public GameObject meshRoot;
     public Color floatColor;
     public float gravityScale = 3;
@@ -14,6 +16,7 @@ public class BoyoMovement : MonoBehaviour
     public float totalFloatTime = 5.0F;
     
 
+    private InputAction moveAction;
     private Rigidbody rb;
     private Transform meshTransform;
     public bool onGround = false;
@@ -28,8 +31,11 @@ public class BoyoMovement : MonoBehaviour
     private Color standardColor;
     public bool repulsing = false; // is boyo being repulsed after pain?
     
-    // Start is called before the first frame update
+
     void Start() {
+        moveAction = actions.FindActionMap("gameplay").FindAction("move"); // find the Move action and store it
+        actions.FindActionMap("gameplay").FindAction("jump").performed += OnJump;
+        
         rb = GetComponent<Rigidbody>();
         mass = rb.mass;
         remainingFloatTime = totalFloatTime;
@@ -54,11 +60,9 @@ public class BoyoMovement : MonoBehaviour
     
     // Physics goes here
     private void FixedUpdate() {
-    
         
-        
-        float horizontalInput = Input.GetAxis("Horizontal");
-        
+        Vector2 moveVector = moveAction.ReadValue<Vector2>();
+        float horizontalInput = moveVector.x;
         
         // Rotation
         float direction = meshTransform.eulerAngles.y;
@@ -125,12 +129,8 @@ public class BoyoMovement : MonoBehaviour
     }
     
     
-    void OnMove() {
-    }
     
-    
-    
-    void OnJump() {
+    private void OnJump(InputAction.CallbackContext context) {
         if (onGround) {
             jumping = true;
             bounceCount = 1;
@@ -175,4 +175,13 @@ public class BoyoMovement : MonoBehaviour
         Debug.Log("repulsion vector is " + repulsion);
     }
     
+    
+    void OnEnable()
+    {
+        actions.FindActionMap("gameplay").Enable();
+    }
+    void OnDisable()
+    {
+        actions.FindActionMap("gameplay").Disable();
+    }
 }

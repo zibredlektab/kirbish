@@ -6,7 +6,7 @@ public class GenericMovement : MonoBehaviour {
 
 
     public float moveSpeed = 5;
-    public float turnSpeed = 2;
+    public float turnDuration = 2;
     
     private Vector3 targetAngles;
     private Vector3 startAngles;
@@ -21,7 +21,7 @@ public class GenericMovement : MonoBehaviour {
 
     void FixedUpdate() {
         if (rotating) {        
-            transform.eulerAngles = Vector3.Lerp(startAngles, targetAngles, (Time.time - timeRotationStarted) / turnSpeed); // Rotate a little bit each frame
+            transform.eulerAngles = Vector3.Lerp(startAngles, targetAngles, (Time.time - timeRotationStarted) / turnDuration); // Rotate a little bit each frame
             
             // Check if target rotation has been reached (approximately)
             if (transform.eulerAngles.y < 1 || transform.eulerAngles.y > 359) {

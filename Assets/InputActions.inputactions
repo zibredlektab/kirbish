@@ -2,7 +2,7 @@
     "name": "InputActions",
     "maps": [
         {
-            "name": "Player",
+            "name": "gameplay",
             "id": "d477dbd5-61f6-4aeb-883d-12f7beea05c5",
             "actions": [
                 {
@@ -36,7 +36,7 @@
                     "name": "Attack",
                     "type": "Value",
                     "id": "54950972-b486-40df-8ef1-44a84c8caeee",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "Digital",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
@@ -237,17 +237,6 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
-                    "action": "Attack",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "d20019a7-ab9a-4028-a50b-88dc9222d894",
-                    "path": "",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
                     "action": "Attack",
                     "isComposite": false,
                     "isPartOfComposite": false

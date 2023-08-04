@@ -123,6 +123,59 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &316742159
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 316742160}
+  - component: {fileID: 316742161}
+  m_Layer: 3
+  m_Name: BreatheIn
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &316742160
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 316742159}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1058966957}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &316742161
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 316742159}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 4.45, y: 3.82, z: 1.36}
+  m_Center: {x: 2.26, y: 0, z: 0}
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -666,7 +719,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Actions: {fileID: -944628639613478452, guid: bed8c2145966b47358eca34b1e1e2bf9,
     type: 3}
-  m_NotificationBehavior: 0
+  m_NotificationBehavior: 2
   m_UIInputModule: {fileID: 0}
   m_DeviceLostEvent:
     m_PersistentCalls:
@@ -679,19 +732,7 @@ MonoBehaviour:
       m_Calls: []
   m_ActionEvents:
   - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2100000, guid: 880df91018b2e412980d9d5d3430abba, type: 2}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_ActionId: 9b404a7b-5476-4fff-bdfb-a6029596a1ba
     m_ActionName: Player/Move[/Keyboard/w,/Keyboard/upArrow,/Keyboard/s,/Keyboard/downArrow,/Keyboard/a,/Keyboard/leftArrow,/Keyboard/d,/Keyboard/rightArrow]
   - m_PersistentCalls:
@@ -742,9 +783,13 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 1805d278-183d-4372-b10c-7cf37004bd90
     m_ActionName: UI/TrackedDeviceOrientation
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 54950972-b486-40df-8ef1-44a84c8caeee
+    m_ActionName: gameplay/Attack[/Keyboard/period]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: Keyboard&Mouse
-  m_DefaultActionMap: Player
+  m_DefaultActionMap: gameplay
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 330585545}
 --- !u!114 &903076229
@@ -759,6 +804,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe3fdcbee945143c1ab52367dc047210, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  actions: {fileID: -944628639613478452, guid: bed8c2145966b47358eca34b1e1e2bf9, type: 3}
   meshRoot: {fileID: 1058966956}
   floatColor: {r: 0.090409756, g: 0, b: 1, a: 0}
   gravityScale: 4.5
@@ -798,6 +844,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e704c79635b64e449fbbe902481ec70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  breathInRegion: {fileID: 316742159}
+  actions: {fileID: -944628639613478452, guid: bed8c2145966b47358eca34b1e1e2bf9, type: 3}
 --- !u!136 &903076232
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -833,7 +881,7 @@ GameObject:
   - component: {fileID: 1058966959}
   - component: {fileID: 1058966958}
   m_Layer: 3
-  m_Name: Mesh
+  m_Name: MeshRoot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -853,6 +901,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1309980968}
+  - {fileID: 316742160}
   m_Father: {fileID: 903076226}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &1058966958
@@ -1453,8 +1502,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c27905af46c954521b9ced8104211678, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 5
-  turnSpeed: 2
+  moveSpeed: 4
+  turnDuration: 2
 --- !u!1 &1793157016
 GameObject:
   m_ObjectHideFlags: 0
