@@ -849,6 +849,7 @@ MonoBehaviour:
   mouth: {fileID: 1309980967}
   projectile: {fileID: 505841986342609570, guid: 994b63c1bec57452cb73bd563a9a9991,
     type: 3}
+  meshRoot: {fileID: 1058966956}
 --- !u!136 &903076232
 CapsuleCollider:
   m_ObjectHideFlags: 0

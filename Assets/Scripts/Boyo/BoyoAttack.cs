@@ -9,6 +9,7 @@ public class BoyoAttack : MonoBehaviour {
     public InputActionAsset actions;
     public GameObject mouth;
     public GameObject projectile;
+    public GameObject meshRoot;
     
     private InputAction attackAction;
     private bool attacking = false;
@@ -27,8 +28,17 @@ public class BoyoAttack : MonoBehaviour {
         
             if (mouthFull == 2) {
                 // spit out blob
-                Debug.Log("spitting out blob");
-                Instantiate(projectile, new Vector3(transform.position.x + 1, transform.position.y, transform.position.z), new Quaternion(0,0,0,0));  
+                float blobDirection = 1f;
+                float meshDirection = meshRoot.transform.eulerAngles.y;
+                if (meshDirection < 1 || meshDirection > 359) {
+                    blobDirection = 1f;
+                } else if (meshDirection > 179 && meshDirection < 181) {
+                    blobDirection = -1f;
+                }
+                Vector3 blobPosition = new Vector3(transform.position.x + blobDirection, transform.position.y, transform.position.z);
+                GameObject blob = Instantiate(projectile, blobPosition, new Quaternion(0,0,0,0));
+                blob.GetComponent<GenericProjectile>().direction = blobDirection;
+                
                 mouth.transform.localScale = new Vector3(0.25f, 0.25f, 0.25f);
                 mouthFull = 3;
             } else {

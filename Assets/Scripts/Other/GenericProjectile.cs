@@ -7,8 +7,8 @@ public class GenericProjectile : MonoBehaviour {
     public float speed = 4;
     public float direction = 1;
 
-    void Start() {
-        
+    void Start() {        
+
     }
 
     void FixedUpdate() {
