@@ -29,7 +29,7 @@ public class BoyoMovement : MonoBehaviour
     private GameObject groundObject;
     private Material mat;
     private Color standardColor;
-    public bool repulsing = false; // is boyo being repulsed after pain?
+    public bool recoiling = false; // is boyo being repulsed after pain?
     private bool suction = false;
     
 
@@ -76,7 +76,7 @@ public class BoyoMovement : MonoBehaviour
         // Horizontal movement
         if (remainingFloatTime < 2) horizontalInput *= 0.5F; // slower movement when air starts to run out
         if (suction) horizontalInput *= 0.5F; // slower movement while suctioning
-        if (repulsing) horizontalInput = 0; // no movement while being repulsed
+        if (recoiling) horizontalInput = 0; // no movement while being repulsed
         
         transform.Translate(new Vector3(horizontalInput, 0, 0) * moveSpeed * Time.deltaTime);
     
@@ -102,7 +102,7 @@ public class BoyoMovement : MonoBehaviour
             
             if (floating) EndFloat();
             
-            if (repulsing) repulsing = false;
+            if (recoiling) recoiling = false;
         
             if (timeFalling > 1) {
                 bounceCount = 2;
@@ -178,7 +178,7 @@ public class BoyoMovement : MonoBehaviour
         
         Vector3 repulsion = new Vector3(xdir, ydir, 0);
         
-        repulsing = true;
+        recoiling = true;
         rb.AddForce(repulsion, ForceMode.Impulse); // push back from pain
         bounceCount = 1;
     }

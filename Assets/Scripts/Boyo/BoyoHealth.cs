@@ -17,7 +17,6 @@ public class BoyoHealth : MonoBehaviour {
     private float lerpTime = 0;
     private bool recovering = false;
     private bool attacking = false;
-    private GameObject currentlyAttacking; // this should be an array, as multiple enemies can be attacked simultaneously
         
     void Start() {
     
@@ -66,7 +65,7 @@ public class BoyoHealth : MonoBehaviour {
     
     
     void OnTriggerEnter(Collider collider) {    
-        //Debug.Log("On Trigger Enter from BoyoHealth, with " + collider.gameObject.name);
+        Debug.Log("On Trigger Enter from BoyoHealth, with " + collider.gameObject.name);
         
         if (collider.gameObject.CompareTag("Pain")) {
             if (!recovering && !attacking) {
@@ -79,9 +78,6 @@ public class BoyoHealth : MonoBehaviour {
                 }
             
                 gameObject.SendMessage("OnPain", collisionDirection);
-            } else if (attacking) {
-                currentlyAttacking = collider.gameObject;
-                collider.gameObject.transform.parent.BroadcastMessage("OnSuction", transform.position);
             }
         }
     }
@@ -92,9 +88,5 @@ public class BoyoHealth : MonoBehaviour {
     
     void OnAttackStop() {
         attacking = false;
-        if (currentlyAttacking != null) {
-            currentlyAttacking.transform.parent.BroadcastMessage("OnSuctionStop");
-            currentlyAttacking = null;
-        }
     }
 }

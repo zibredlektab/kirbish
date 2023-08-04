@@ -30,13 +30,7 @@ public class GenericMovement : MonoBehaviour {
             Vector3 directionToBoyo = new Vector3(0,0,0);
             float distanceToBoyo = boyoPosition.x - transform.position.x;
             
-            if (Mathf.Abs(distanceToBoyo) < .5) {
-                Debug.Log("Enemy " + gameObject.name + " has been sucked in, destroying");
-                Destroy(gameObject);
-            }
-            
             directionToBoyo.x = (moveSpeed * 2) / distanceToBoyo; // Enemy should move towards the player, and get faster as it gets closer
-
 
             // Fix direction to face player
             rotating = false;
