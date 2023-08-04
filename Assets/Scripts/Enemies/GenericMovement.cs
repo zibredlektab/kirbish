@@ -38,10 +38,12 @@ public class GenericMovement : MonoBehaviour {
     
     void OnCollisionEnter(Collision collision) {
         // Turn around when an obstacle is hit
-        rotating = true;
-        targetAngles = transform.eulerAngles + 180F * Vector3.up;
-        startAngles = transform.eulerAngles;
-        timeRotationStarted = Time.time;
+        if (!rotating) {
+            rotating = true;
+            targetAngles = transform.eulerAngles + 180F * Vector3.up;
+            startAngles = transform.eulerAngles;
+            timeRotationStarted = Time.time;
+        }
     }
     
     void OnTriggerEnter(Collider collider) {

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class BoyoHealth : MonoBehaviour {
 
+    public GameObject meshRoot;
     public int maxHealth = 6;
     public int startingLives = 3;
     public Color painColor;
@@ -20,7 +21,7 @@ public class BoyoHealth : MonoBehaviour {
     
         curHealth = maxHealth;
         curLives = startingLives;
-        mat = GetComponent<Renderer>().material;
+        mat = meshRoot.GetComponent<Renderer>().material;
         standardColor = mat.color;
     }
 

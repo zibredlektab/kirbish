@@ -5,6 +5,7 @@ using UnityEngine;
 public class BoyoMovement : MonoBehaviour
 {
 
+    public GameObject meshRoot;
     public Color floatColor;
     public float gravityScale = 3;
     public float jumpSpeed = 20;
@@ -14,6 +15,7 @@ public class BoyoMovement : MonoBehaviour
     
 
     private Rigidbody rb;
+    private Transform meshTransform;
     public bool onGround = false;
     public bool jumping = false;
     public bool floating = false;
@@ -31,8 +33,9 @@ public class BoyoMovement : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         mass = rb.mass;
         remainingFloatTime = totalFloatTime;
-        mat = GetComponent<Renderer>().material;
+        mat = meshRoot.GetComponent<Renderer>().material;
         standardColor = mat.color;
+        meshTransform = meshRoot.transform;
     }
 
     // Update is called once per frame
@@ -52,8 +55,20 @@ public class BoyoMovement : MonoBehaviour
     // Physics goes here
     private void FixedUpdate() {
     
-        // Horizontal movement
+        
+        
         float horizontalInput = Input.GetAxis("Horizontal");
+        
+        
+        // Rotation
+        float direction = meshTransform.eulerAngles.y;
+                
+        if (((direction < 1 || direction > 359) && horizontalInput < 0) || ((Mathf.Abs(direction) > 179 && Mathf.Abs(direction) < 181) && horizontalInput > 0)) {
+            // boyo is facing opposite of input, needs to flip around
+            meshTransform.Rotate(new Vector3(meshTransform.eulerAngles.x, 180, meshTransform.eulerAngles.z));
+        }        
+        
+        // Horizontal movement
         if (remainingFloatTime < 2) horizontalInput *= 0.5F;
         if (!repulsing) transform.Translate(new Vector3(horizontalInput, 0, 0) * moveSpeed * Time.deltaTime);
     
