@@ -87,13 +87,13 @@ public class GenericMovement : MonoBehaviour {
     }
     
     private void OnSuction(Vector3 boyoPos) {
-        Debug.Log("Enemy " + gameObject.name + " is getting sucked in!");
+        //Debug.Log("Enemy " + gameObject.name + " is getting sucked in!");
         suction = true;
         boyoPosition = boyoPos;
     }
     
     private void OnSuctionStop() {
-        Debug.Log("Enemy " + gameObject.name + " is no longer getting sucked in.");
+        //Debug.Log("Enemy " + gameObject.name + " is no longer getting sucked in.");
         suction = false;
     }
 }

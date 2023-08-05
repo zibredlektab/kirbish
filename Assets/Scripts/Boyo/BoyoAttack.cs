@@ -82,14 +82,46 @@ public class BoyoAttack : MonoBehaviour {
     }
     
     void OnTriggerStay(Collider collider) {
-        if (attacking && collider.gameObject.layer == LayerMask.NameToLayer("Enemy")) {
-            currentlyAttacking = collider.gameObject.transform.parent.gameObject;
-            currentlyAttacking.BroadcastMessage("OnSuction", transform.position);
-            if (Mathf.Abs(transform.position.x - currentlyAttacking.transform.position.x) < 0.5F) { // enemy has been sucked into our danger zone
-                mouthFull = 1;
-                Destroy(currentlyAttacking);
-                currentlyAttacking = null;
-                AttackStop();
+        GameObject collisionObject = collider.gameObject;
+        while (collisionObject.transform.parent != null) collisionObject = collisionObject.transform.parent.gameObject; // make sure we're working with the top-level object
+        
+        if (attacking && collisionObject.CompareTag("Suctionable")) { // We are currently in attack mode, and there is a suctionable object in our range
+            
+            // Cast a ray that only hits objects on the Landscape layer, to determine if anything is in the way of the current suctionable object
+            // This doesn't work either, because landscape objects behind the suctionable are still triggering the raycast...
+            
+            RaycastHit hit;
+            int noPlayer = ~LayerMask.GetMask("Player"); // Get the inverse of the layer mask for Player objects, so our ray can't hit the suction region
+            
+            Debug.DrawRay(transform.position, meshRoot.transform.TransformDirection(Vector3.right) * 4.45f, Color.yellow);
+            
+            bool ray = Physics.Raycast(transform.position, meshRoot.transform.TransformDirection(Vector3.right), out hit, 4.45f, noPlayer);
+            
+            if (ray && hit.collider.gameObject.layer == LayerMask.NameToLayer("Landscape")) {
+                // There is a non-suctionable object in the way
+                Debug.Log("Landscape object hit by raycast: " + hit.collider.gameObject.name);
+                
+                if (currentlyAttacking != null) {
+                    currentlyAttacking.BroadcastMessage("OnSuctionStop");
+                    currentlyAttacking = null;
+                }
+                
+            } else {
+                if (ray) {
+                    Debug.Log("Ray hit object " + hit.collider.gameObject.name);
+                } else {
+                    Debug.Log("Ray didn't hit anything");
+                }
+                
+                // Nothing is in the way, apply suction
+                currentlyAttacking = collisionObject.gameObject;
+                currentlyAttacking.BroadcastMessage("OnSuction", transform.position);
+                if (Mathf.Abs(transform.position.x - currentlyAttacking.transform.position.x) < 0.5F) { // enemy has been sucked into our danger zone
+                    mouthFull = 1;
+                    Destroy(currentlyAttacking);
+                    currentlyAttacking = null;
+                    AttackStop();
+                }
             }
         }
     }
