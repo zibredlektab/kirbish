@@ -20,6 +20,9 @@ public class GenericSuctionable : MonoBehaviour {
     
     void FixedUpdate() {
         if (suction) {
+            if (isItem) {
+                GetComponent<BoxCollider>().isTrigger = true;
+            }
             // Find direction to player
             Vector3 directionToBoyo = new Vector3(0,0,0);
             float distanceToBoyo = boyoPosition.x - transform.position.x;
@@ -36,7 +39,11 @@ public class GenericSuctionable : MonoBehaviour {
             directionToBoyo.x = Mathf.Abs(directionToBoyo.x); // now that we are facing player, direction should only be positive
             
             transform.Translate(directionToBoyo * Time.deltaTime); // Move towards player 
-        } 
+        } else {
+            if (isItem) {
+                GetComponent<BoxCollider>().isTrigger = false;
+            }
+        }
     }
     
     
