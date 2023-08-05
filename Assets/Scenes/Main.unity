@@ -844,7 +844,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e704c79635b64e449fbbe902481ec70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  breatheInRegion: {fileID: 316742159}
+  suctionRegion: {fileID: 316742159}
   actions: {fileID: -944628639613478452, guid: bed8c2145966b47358eca34b1e1e2bf9, type: 3}
   mouth: {fileID: 1309980967}
   projectile: {fileID: 505841986342609570, guid: 994b63c1bec57452cb73bd563a9a9991,
@@ -1396,6 +1396,7 @@ GameObject:
   - component: {fileID: 1555678954}
   - component: {fileID: 1555678953}
   - component: {fileID: 1555678958}
+  - component: {fileID: 1555678959}
   m_Layer: 6
   m_Name: MoverEnemy
   m_TagString: Suctionable
@@ -1532,6 +1533,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 4
   turnDuration: 2
+--- !u!114 &1555678959
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1555678952}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 100143a4d1dfb49dc9bae9415f32b391, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isItem: 0
+  suctionSpeedMax: 10
 --- !u!1 &1906135958
 GameObject:
   m_ObjectHideFlags: 0

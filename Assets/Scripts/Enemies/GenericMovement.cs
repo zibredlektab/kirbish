@@ -16,7 +16,6 @@ public class GenericMovement : MonoBehaviour {
     private Rigidbody rb;
     
     private bool suction = false;
-    private Vector3 boyoPosition;
     
 
     void Start() {
@@ -25,25 +24,8 @@ public class GenericMovement : MonoBehaviour {
 
     void FixedUpdate() {
         if (suction) {
-            
-            // Find direction to player
-            Vector3 directionToBoyo = new Vector3(0,0,0);
-            float distanceToBoyo = boyoPosition.x - transform.position.x;
-            
-            directionToBoyo.x = (moveSpeed * 2) / distanceToBoyo; // Enemy should move towards the player, and get faster as it gets closer
-
-            // Fix direction to face player
-            rotating = false;
-            if (directionToBoyo.x > 0) {
-                transform.eulerAngles = new Vector3(transform.eulerAngles.x, 0F, transform.eulerAngles.z);
-            } else {
-                transform.eulerAngles = new Vector3(transform.eulerAngles.x, 180F, transform.eulerAngles.z);
-            }
-
-            directionToBoyo.x = Mathf.Abs(directionToBoyo.x); // now that we are facing player, direction should only be positive
-            
-            transform.Translate(directionToBoyo * Time.deltaTime); // Move towards player     
-            
+             // Don't move if suction is happening (handled by GenericMovement)
+             rotating = false;   
         } else if (!suction && shouldRotate && !rotating) {
             startAngles = transform.eulerAngles;
             if (startAngles.y == 0F) targetAngles.y = 180F;
@@ -87,13 +69,10 @@ public class GenericMovement : MonoBehaviour {
     }
     
     private void OnSuction(Vector3 boyoPos) {
-        //Debug.Log("Enemy " + gameObject.name + " is getting sucked in!");
         suction = true;
-        boyoPosition = boyoPos;
     }
     
     private void OnSuctionStop() {
-        //Debug.Log("Enemy " + gameObject.name + " is no longer getting sucked in.");
         suction = false;
     }
 }
