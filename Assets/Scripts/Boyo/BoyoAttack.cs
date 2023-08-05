@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 
 public class BoyoAttack : MonoBehaviour {
 
-    public GameObject breatheInRegion;
+    public GameObject suctionRegion;
     public InputActionAsset actions;
     public GameObject mouth;
     public GameObject projectile;
@@ -55,7 +55,7 @@ public class BoyoAttack : MonoBehaviour {
     }
     
     void AttackStart() {
-        breatheInRegion.SetActive(true);
+        suctionRegion.SetActive(true);
         gameObject.BroadcastMessage("OnAttack");
     }
     
@@ -72,7 +72,7 @@ public class BoyoAttack : MonoBehaviour {
     
     void OnAttackStop() {
         attacking = false;
-        breatheInRegion.SetActive(false);
+        suctionRegion.SetActive(false);
         mouth.transform.localScale = new Vector3(mouth.transform.localScale.x, mouth.transform.localScale.y, 0.25f);
         
         if (currentlyAttacking != null) { // we had an enemy in our suction region
@@ -88,18 +88,18 @@ public class BoyoAttack : MonoBehaviour {
         if (attacking && collisionObject.CompareTag("Suctionable")) { // We are currently in attack mode, and there is a suctionable object in our range
             
             // Cast a ray that only hits objects on the Landscape layer, to determine if anything is in the way of the current suctionable object
-            // This doesn't work either, because landscape objects behind the suctionable are still triggering the raycast...
+            // Ray starts 0.5 units behind the players transform, so that it will continue to register the suctioned object up until the moment it is eaten
+            // Ray extends 4.95 units ahead of player to account for the above 0.5, and reach the end of the 4.45 unit suction region
             
             RaycastHit hit;
-            int noPlayer = ~LayerMask.GetMask("Player"); // Get the inverse of the layer mask for Player objects, so our ray can't hit the suction region
+            int noPlayer = ~LayerMask.GetMask("Player"); // Get the inverse of the layer mask for Player objects, so our ray can't hit the suction region or any other part of boyo
             
-            Debug.DrawRay(transform.position, meshRoot.transform.TransformDirection(Vector3.right) * 4.45f, Color.yellow);
+            //Debug.DrawRay(new Vector3(transform.position.x - 0.5f, transform.position.y, transform.position.z), meshRoot.transform.TransformDirection(Vector3.right) * 4.95f, Color.yellow);
             
-            bool ray = Physics.Raycast(transform.position, meshRoot.transform.TransformDirection(Vector3.right), out hit, 4.45f, noPlayer);
+            bool ray = Physics.Raycast(new Vector3(transform.position.x - 0.5f, transform.position.y, transform.position.z), meshRoot.transform.TransformDirection(Vector3.right), out hit, 4.95f, noPlayer);
             
             if (ray && hit.collider.gameObject.layer == LayerMask.NameToLayer("Landscape")) {
                 // There is a non-suctionable object in the way
-                Debug.Log("Landscape object hit by raycast: " + hit.collider.gameObject.name);
                 
                 if (currentlyAttacking != null) {
                     currentlyAttacking.BroadcastMessage("OnSuctionStop");
@@ -107,11 +107,6 @@ public class BoyoAttack : MonoBehaviour {
                 }
                 
             } else {
-                if (ray) {
-                    Debug.Log("Ray hit object " + hit.collider.gameObject.name);
-                } else {
-                    Debug.Log("Ray didn't hit anything");
-                }
                 
                 // Nothing is in the way, apply suction
                 currentlyAttacking = collisionObject.gameObject;

@@ -134,7 +134,7 @@ GameObject:
   - component: {fileID: 316742160}
   - component: {fileID: 316742161}
   m_Layer: 3
-  m_Name: BreatheIn
+  m_Name: Suction
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
