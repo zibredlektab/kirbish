@@ -8,6 +8,7 @@ public class GenericSuctionable : MonoBehaviour {
     public float suctionSpeedMax = 10f;
     
     private bool suction = false;
+    private bool continueSuction = false;
     private Vector3 boyoPosition;
 
     void Start() {
@@ -19,36 +20,39 @@ public class GenericSuctionable : MonoBehaviour {
     }
     
     void FixedUpdate() {
-        if (suction) {
+        if (suction || (isItem && continueSuction)) {
+        
+            Vector3 directionToBoyo = new Vector3(0,0,0);
+            
             if (isItem) {
                 GetComponent<BoxCollider>().isTrigger = true;
+                continueSuction = true;
+                //directionToBoyo.y = suctionSpeedMax / (boyoPosition.y - transform.position.y);
             }
+            
             // Find direction to player
-            Vector3 directionToBoyo = new Vector3(0,0,0);
             float distanceToBoyo = boyoPosition.x - transform.position.x;
             
-            directionToBoyo.x = suctionSpeedMax / distanceToBoyo; // Enemy should move towards the player, and get faster as it gets closer
+            directionToBoyo.x = suctionSpeedMax / (distanceToBoyo/2); // Enemy should move towards the player, and get faster as it gets closer
 
             // Fix direction to face player
-            if (directionToBoyo.x > 0) {
-                transform.eulerAngles = new Vector3(transform.eulerAngles.x, 0F, transform.eulerAngles.z);
-            } else {
-                transform.eulerAngles = new Vector3(transform.eulerAngles.x, 180F, transform.eulerAngles.z);
+            if (!isItem) { // only enemies turn to face player, items stay as they are
+                if (directionToBoyo.x > 0) {
+                    transform.eulerAngles = new Vector3(transform.eulerAngles.x, 0F, transform.eulerAngles.z);
+                } else {
+                    transform.eulerAngles = new Vector3(transform.eulerAngles.x, 180F, transform.eulerAngles.z);
+                }                
+                directionToBoyo.x = Mathf.Abs(directionToBoyo.x); // now that we are facing player, direction should only be positive
             }
-
-            directionToBoyo.x = Mathf.Abs(directionToBoyo.x); // now that we are facing player, direction should only be positive
             
-            transform.Translate(directionToBoyo * Time.deltaTime); // Move towards player 
-        } else {
-            if (isItem) {
-                GetComponent<BoxCollider>().isTrigger = false;
-            }
+            
+            transform.Translate(directionToBoyo * Time.deltaTime); // Move towards player
         }
     }
     
     
     private void OnSuction(Vector3 boyoPos) {
-        Debug.Log("Suctionable " + gameObject.name + " is getting sucked in!");
+        //Debug.Log("Suctionable " + gameObject.name + " is getting sucked in!");
         suction = true;
         boyoPosition = boyoPos;
     }

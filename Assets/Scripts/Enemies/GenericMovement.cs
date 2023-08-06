@@ -10,12 +10,15 @@ public class GenericMovement : MonoBehaviour {
     
     private Vector3 targetAngles;
     private Vector3 startAngles;
-    private bool shouldRotate = true; // has a collision occurred?
-    private bool rotating = false; // are we currently rotating?
+    public bool shouldRotate = true; // has a collision occurred?
+    public bool rotating = false; // are we currently rotating?
     private float timeRotationStarted;
     private Rigidbody rb;
     
-    private bool suction = false;
+    public bool suction = false;
+    public bool moving = false;
+    public float xPosition;
+
     
 
     void Start() {
@@ -23,9 +26,12 @@ public class GenericMovement : MonoBehaviour {
     }
 
     void FixedUpdate() {
+        moving = false;
+        xPosition = transform.position.x;
+        
         if (suction) {
-             // Don't move if suction is happening (handled by GenericMovement)
-             rotating = false;   
+            // Don't move if suction is happening (handled by GenericMovement)
+            rotating = false;
         } else if (!suction && shouldRotate && !rotating) {
             startAngles = transform.eulerAngles;
             if (startAngles.y == 0F) targetAngles.y = 180F;
@@ -42,6 +48,7 @@ public class GenericMovement : MonoBehaviour {
             
             // Check if target rotation has been reached
             if (Mathf.Abs(transform.eulerAngles.y - targetAngles.y) < 1) {
+                Debug.Log("Target rotation has been reached");
                 rotating = false;
                 // Ensure we're always facing 100% left or right    
                 if (transform.eulerAngles.y < 1 || transform.eulerAngles.y > 359) {
@@ -51,6 +58,7 @@ public class GenericMovement : MonoBehaviour {
                 }
             }
         } else {
+            moving = true;
             transform.Translate(new Vector3(moveSpeed, 0, 0) * Time.deltaTime); // Move forwards
         }
    }
@@ -62,6 +70,10 @@ public class GenericMovement : MonoBehaviour {
         if (!rotating && !shouldRotate) {
             shouldRotate = true;
         }
+    }
+    
+    void OnCollisionStay(Collision collider) {
+        OnCollisionEnter(collider);
     }
     
     void OnTriggerEnter(Collider collider) {
