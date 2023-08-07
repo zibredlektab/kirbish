@@ -5,14 +5,13 @@ using UnityEngine;
 public class GenericProjectile : MonoBehaviour {
 
     public float speed = 8;
-    public float direction = 1;
 
     void Start() {        
 
     }
 
     void FixedUpdate() {
-        transform.Translate(new Vector3(speed * direction, 0, 0) * Time.deltaTime);
+        transform.Translate(new Vector3(speed, 0, 0) * Time.deltaTime);
     }
     
     void OnCollisionEnter(Collision collision) {
