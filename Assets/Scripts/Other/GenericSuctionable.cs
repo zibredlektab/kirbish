@@ -8,8 +8,9 @@ public class GenericSuctionable : MonoBehaviour {
     public float suctionSpeedMax = 10f;
     
     private bool suction = false;
-    private bool continueSuction = false;
-    private Vector3 boyoPosition;
+    public bool continueSuction = false;
+    
+    private Transform boyoTransform;
 
     void Start() {
         
@@ -22,12 +23,14 @@ public class GenericSuctionable : MonoBehaviour {
     void FixedUpdate() {
         if (suction || (isItem && continueSuction)) {
         
+        
             Vector3 directionToBoyo = new Vector3(0,0,0);
+            Vector3 boyoPosition = boyoTransform.position;
             
             if (isItem) {
-                GetComponent<BoxCollider>().isTrigger = true;
                 continueSuction = true;
-                //directionToBoyo.y = suctionSpeedMax / (boyoPosition.y - transform.position.y);
+                //directionToBoyo.y = suctionSpeedMax / ((boyoPosition.y - transform.position.y)/2);
+                gameObject.GetComponent<Collider>().isTrigger = true;
             }
             
             // Find direction to player
@@ -45,16 +48,17 @@ public class GenericSuctionable : MonoBehaviour {
                 directionToBoyo.x = Mathf.Abs(directionToBoyo.x); // now that we are facing player, direction should only be positive
             }
             
+            Rigidbody rb = gameObject.GetComponent<Rigidbody>();
             
-            transform.Translate(directionToBoyo * Time.deltaTime); // Move towards player
+            rb.Move(new Vector3(rb.position.x + (directionToBoyo.x * Time.deltaTime), rb.position.y + (directionToBoyo.y * Time.deltaTime), rb.position.z), rb.rotation); // Move towards player
         }
     }
     
     
-    private void OnSuction(Vector3 boyoPos) {
+    private void OnSuction(Transform boyoTrans) {
         //Debug.Log("Suctionable " + gameObject.name + " is getting sucked in!");
         suction = true;
-        boyoPosition = boyoPos;
+        boyoTransform = boyoTrans;
     }
     
     private void OnSuctionStop() {

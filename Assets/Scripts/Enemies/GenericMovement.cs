@@ -80,7 +80,7 @@ public class GenericMovement : MonoBehaviour {
         //Debug.Log("Enemy " + gameObject.name + " entered trigger " + collider.gameObject.name);
     }
     
-    private void OnSuction(Vector3 boyoPos) {
+    private void OnSuction(Transform boyoTrans) {
         suction = true;
     }
     

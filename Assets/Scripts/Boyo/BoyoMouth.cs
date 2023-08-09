@@ -17,10 +17,15 @@ public class BoyoMouth : MonoBehaviour {
     
     void OnTriggerEnter(Collider collider) {
         Debug.Log("Object " + collider.gameObject.name + " has reached mouth");
-        if (suction && collider.gameObject.tag == "Suctionable") {
-            Debug.Log("Suctionable object " + collider.gameObject.name + " has reached mouth");
-            mainObject.SendMessage("OnEaten", collider.gameObject);
-        }    
+        GameObject toEat = collider.gameObject;
+        while (toEat.transform.parent != null) toEat = toEat.transform.parent.gameObject;
+        if (toEat.tag == "Suctionable") {
+            GenericSuctionable suctionable = toEat.GetComponent<GenericSuctionable>();
+            if ((suctionable.isItem && suctionable.continueSuction) || suction) {
+                Debug.Log("Suctionable object " + toEat.name + " has reached mouth");
+                mainObject.SendMessage("OnEaten", toEat);
+            }
+        }
     }
     
     void OnAttack() {

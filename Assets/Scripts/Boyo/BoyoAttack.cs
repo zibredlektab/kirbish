@@ -35,7 +35,6 @@ public class BoyoAttack : MonoBehaviour {
                 } else if (meshDirection > 179 && meshDirection < 181) {
                     projectileDirection = -1f;
                 }
-                Debug.Log("Projectile Direction should be " + projectileDirection);
                 Vector3 projectilePosition = new Vector3(transform.position.x + projectileDirection, transform.position.y, transform.position.z);
                 //GameObject blob = Instantiate(projectile, projectilePosition, new Quaternion(0,0,0,0));
                 //blob.GetComponent<GenericProjectile>().direction = projectileDirection;
@@ -44,6 +43,7 @@ public class BoyoAttack : MonoBehaviour {
                 currentlyAttacking.SetActive(true);
                 currentlyAttacking.transform.position = projectilePosition;
                 currentlyAttacking.transform.rotation = meshRoot.transform.rotation;
+                currentlyAttacking.transform.parent = null;
                 
                 currentlyAttacking = null;
 
@@ -81,27 +81,32 @@ public class BoyoAttack : MonoBehaviour {
         
         // Remove all movement scripts & interactors from applicable eaten objects
         if (!currentlyAttacking.GetComponent<GenericSuctionable>().isItem) {
-            Destroy(currentlyAttacking.GetComponent<GenericMovement>()); // Stop object from moving - this needs to be checked for before destruction, items don't have this
+            Destroy(currentlyAttacking.GetComponent<GenericMovement>()); // Stop object from moving
             Destroy(currentlyAttacking.transform.Find("Interactor").gameObject); // Stop object from interacting with player
-        }
-        
-        // Reduce the scale of eaten object
-        currentlyAttacking.transform.localScale = new Vector3 (currentlyAttacking.transform.localScale.x * 0.75f, currentlyAttacking.transform.localScale.y * 0.75f, currentlyAttacking.transform.localScale.z * 0.75f);
+            
+            // Reduce the scale of eaten object
+            currentlyAttacking.transform.localScale = new Vector3 (currentlyAttacking.transform.localScale.x * 0.75f, currentlyAttacking.transform.localScale.y * 0.75f, currentlyAttacking.transform.localScale.z * 0.75f);
 
-        // Stop physics on eaten object
-        currentlyAttacking.GetComponent<Rigidbody>().velocity = new Vector3(0,0,0);
-        currentlyAttacking.GetComponent<Rigidbody>().isKinematic = true;
+            // Stop physics on eaten object
+            currentlyAttacking.GetComponent<Rigidbody>().velocity = new Vector3(0,0,0);
+            currentlyAttacking.GetComponent<Rigidbody>().isKinematic = true;
         
-        // Remove all tags from the eaten object
-        for (int i = 0; i < currentlyAttacking.transform.childCount; i++) { 
-            currentlyAttacking.transform.GetChild(i).tag = "Untagged";
+            // Remove all tags from the eaten object
+            for (int i = 0; i < currentlyAttacking.transform.childCount; i++) { 
+                currentlyAttacking.transform.GetChild(i).tag = "Untagged";
+            }
+        
+            // Make the object a projectile
+            currentlyAttacking.AddComponent(typeof(GenericProjectile));
+        
+            mouthFull = 1;
+            mouth.transform.localScale = new Vector3(0.5f, mouth.transform.localScale.y, 0.5f);
+        } else {
+            Destroy(currentlyAttacking); // Items are immediately swallowed
+            mouthFull = 3;
+            mouth.transform.localScale = new Vector3(0.25f, 0.25f, 0.25f);
         }
         
-        // Make the object a projectile
-        currentlyAttacking.AddComponent(typeof(GenericProjectile));
-        
-        mouthFull = 1;
-        mouth.transform.localScale = new Vector3(0.5f, mouth.transform.localScale.y, 0.5f);
     }
     
     void OnAttack() {
@@ -122,7 +127,7 @@ public class BoyoAttack : MonoBehaviour {
         
         if (currentlyAttacking != null) { // we had an enemy in our suction region
             currentlyAttacking.BroadcastMessage("OnSuctionStop"); // tell them suction has ended
-            if (mouthFull == 0) currentlyAttacking = null; // we didn't catch an enemy
+            currentlyAttacking = null;
         }
     }
     
@@ -155,7 +160,7 @@ public class BoyoAttack : MonoBehaviour {
                 
                 // Nothing is in the way, apply suction
                 currentlyAttacking = collisionObject.gameObject;
-                currentlyAttacking.BroadcastMessage("OnSuction", transform.position);
+                currentlyAttacking.BroadcastMessage("OnSuction", transform);
             }
         }
     }

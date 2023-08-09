@@ -78,8 +78,9 @@ public class BoyoMovement : MonoBehaviour
         if (suction) horizontalInput *= 0.5F; // slower movement while suctioning
         if (recoiling) horizontalInput = 0; // no movement while being repulsed
         
-        transform.Translate(new Vector3(horizontalInput, 0, 0) * moveSpeed * Time.deltaTime);
+        rb.Move(new Vector3(rb.position.x + (horizontalInput * moveSpeed * Time.deltaTime), rb.position.y, rb.position.z), rb.rotation);
     
+        // Vertical movement
         if (!floating) {
             rb.AddForce(Physics.gravity * (gravityScale - 1) * rb.mass); // scale up gravity so we fall faster
             if (!onGround) timeFalling += Time.deltaTime; // track how long we've been falling;
@@ -95,6 +96,7 @@ public class BoyoMovement : MonoBehaviour
     void OnCollisionEnter(Collision collision) {
         //Debug.Log("collision with " + collision.gameObject.name);
         if (collision.GetContact(0).normal.y > .5) { // only bottom-facing normals count as ground collisions
+            Debug.Log("Boyo on ground");
             onGround = true;
             jumping = false;
             groundObject = collision.gameObject;
@@ -120,6 +122,7 @@ public class BoyoMovement : MonoBehaviour
     
     void OnCollisionExit(Collision collision) {
         if (onGround && groundObject == collision.gameObject) {
+            Debug.Log("Boyo not on ground");
             onGround = false;
         }
     }

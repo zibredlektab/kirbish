@@ -18,4 +18,8 @@ public class GenericProjectile : MonoBehaviour {
         Debug.Log("projectile " + gameObject.name + " collided with " + collision.gameObject.name);
         Destroy(gameObject);
     }
+    
+    public void setSpeed(float newSpeed) {
+        speed = newSpeed;
+    }
 }
